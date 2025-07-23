@@ -54,6 +54,7 @@ from utils import (
     get_width,
     parse_config,
     print_err,
+    selinux_context,
     validate_sysctl,
     warn_if_root,
 )
@@ -816,7 +817,7 @@ def audit_secureboot():
 
 
 @audit
-def audit_bash_env_lockdown():
+def audit_bash_env_lockdown(state):
     """Ensure the current user's bash environment is locked down."""
     bash_env_paths = map(
         os.path.expanduser,
@@ -855,7 +856,29 @@ def audit_bash_env_lockdown():
     else:
         status = PASS
         rec = None
+    state["bash_env_lockdown"] = status == PASS
     yield Report(_("Ensuring current user's bash environment is locked down"), status, recs=rec)
+
+
+@audit
+@depends_on("audit_bash_env_lockdown")
+def audit_home_dir_perms(state):
+    """Audit home directory permissions"""
+    if not state.get("bash_env_lockdown"):
+        return
+    status = PASS
+    rec = None
+    config_dir = os.path.expanduser("~/.config")
+    selinux_type = selinux_context(config_dir)[2]
+    if selinux_type != "config_locked_home_t":
+        status = FAIL
+        rec = f"""
+            {config_dir} is not locked down.
+            This is a gap in the bash environment lockdown.
+            To fix, run the following twice (to toggle the lockdown off and on again):
+            $ ujust toggle-bash-environment-lockdown
+        """
+    yield Report("Ensuring config directory is locked down", status, recs=rec)
 
 
 @audit
