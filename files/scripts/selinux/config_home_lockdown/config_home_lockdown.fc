@@ -1,0 +1,38 @@
+# Copyright 2025 The Secureblue Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+HOME_DIR/\.config			gen_context(system_u:object_r:config_home_t,s0)
+HOME_DIR/\.config/.+			gen_context(system_u:object_r:config_contents_home_t,s0)
+/root/\.config				gen_context(system_u:object_r:config_home_t,s0)
+/root/\.config/.+			gen_context(system_u:object_r:config_contents_home_t,s0)
+
+HOME_DIR/\.cache/dconf			gen_context(system_u:object_r:dconf_config_home_t,s0)
+HOME_DIR/\.cache/dconf/.+		gen_context(system_u:object_r:dconf_config_home_t,s0)
+/root/\.cache/dconf			gen_context(system_u:object_r:dconf_config_home_t,s0)
+/root/\.cache/dconf/.+			gen_context(system_u:object_r:dconf_config_home_t,s0)
+/run/user/%{USERID}/dconf		gen_context(system_u:object_r:dconf_config_home_t,s0)
+/run/user/%{USERID}/dconf/.+		gen_context(system_u:object_r:dconf_config_home_t,s0)
+
+HOME_DIR/\.kde				gen_context(system_u:object_r:kde_config_home_t,s0)
+HOME_DIR/\.kde/.+			gen_context(system_u:object_r:kde_config_home_t,s0)
+/root/\.kde				gen_context(system_u:object_r:kde_config_home_t,s0)
+/root/\.kde/.+				gen_context(system_u:object_r:kde_config_home_t,s0)
+
+HOME_DIR/\.xine				gen_context(system_u:object_r:xine_config_home_t,s0)
+HOME_DIR/\.xine/.+			gen_context(system_u:object_r:xine_config_home_t,s0)
+/root/\.xine				gen_context(system_u:object_r:xine_config_home_t,s0)
+/root/\.xine/.+				gen_context(system_u:object_r:xine_config_home_t,s0)
+
+HOME_DIR/\.Xdefaults			gen_context(system_u:object_r:xdefaults_config_home_t,s0)
+/root/\.Xdefaults			gen_context(system_u:object_r:xdefaults_config_home_t,s0)

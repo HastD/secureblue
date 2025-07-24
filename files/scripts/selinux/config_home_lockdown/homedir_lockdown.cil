@@ -1,0 +1,46 @@
+; Copyright 2025 The Secureblue Authors
+;
+; Licensed under the Apache License, Version 2.0 (the "License");
+; you may not use this file except in compliance with the License.
+; You may obtain a copy of the License at
+;
+;     http://www.apache.org/licenses/LICENSE-2.0
+;
+; Unless required by applicable law or agreed to in writing, software distributed under the License is
+; distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+; See the License for the specific language governing permissions and limitations under the License.
+
+(type config_contents_home_t)
+(roletype object_r config_contents_home_t)
+
+(allow config_contents_home_t user_home_t (filesystem (associate)))
+(allow config_contents_home_t fs_t (filesystem (associate)))
+
+(macro set_config_contents_perms ((type PROCESS_T))
+    (allow PROCESS_T config_contents_home_t (dir (add_name append execute getattr link map open read remove_name search watch write watch_reads watch_sb watch_with_perm)))
+    (typetransition PROCESS_T config_home_t dir config_contents_home_t)
+    (typetransition PROCESS_T config_home_t file config_contents_home_t)
+    (typetransition PROCESS_T config_home_t lnk_file config_contents_home_t)
+)
+
+allow userdom_filetrans_type config_home_t:dir { add_name getattr ioctl lock open read remove_name search write };
+allow userdomain config_home_t:dir             { add_name getattr ioctl lock open read remove_name search write };
+
+(call set_config_contents_perms (container_runtime_t))
+(call set_config_contents_perms (container_t))
+(call set_config_contents_perms (flatpak_t))
+(call set_config_contents_perms (init_t))
+(call set_config_contents_perms (spc_t))
+(call set_config_contents_perms (trivalent_script_t))
+(call set_config_contents_perms (trivalent_t))
+(call set_config_contents_perms (unconfined_dbusd_t))
+(call set_config_contents_perms (unconfined_t))
+
+(allow unconfined_t config_contents_home_t (dir (audit_access execmod ioctl lock quotaon setattr watch_mount create mounton relabelfrom relabelto rename reparent rmdir unlink)))
+
+;; (boolean homedir_lockdown_enabled false)
+;; (booleanif homedir_lockdown_enabled
+;;     (true
+;;         (deny unconfined_t config_home_t (dir (create mounton relabelfrom relabelto rename reparent rmdir unlink)))
+;;     )
+;; )

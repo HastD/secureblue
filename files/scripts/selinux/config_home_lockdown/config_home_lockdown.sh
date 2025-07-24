@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# Copyright 2025 The Secureblue Authors
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+echo "Building and Loading Policy"
+
+set -x
+
+make -f /usr/share/selinux/devel/Makefile trivalent.pp || exit
+/usr/sbin/semodule -i config_home_lockdown.pp -v
+
+/sbin/restorecon -F -R -v /var/home/*/.config /root/.config
+/sbin/restorecon -F -R -v /var/home/*/.cache/dconf /root/.cache/dconf /run/user/*/dconf
+/sbin/restorecon -F -R -v /var/home/*/{.kde,.xine,.Xdefaults} /root/{.kde,.xine,.Xdefaults}
