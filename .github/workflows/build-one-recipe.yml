@@ -152,17 +152,3 @@ jobs:
           IMAGE_DIGEST="$(regctl image digest "${FULL_IMAGE_REF}")"
           echo "FULL_IMAGE_REF=${FULL_IMAGE_REF}" >> "${GITHUB_OUTPUT}"
           echo "IMAGE_DIGEST=${IMAGE_DIGEST}" >> "${GITHUB_OUTPUT}"
-
-  provenance:
-    needs: [bluebuild]
-    permissions:
-      actions: read # for detecting the Github Actions environment.
-      id-token: write # for creating OIDC tokens for signing.
-      packages: write # for uploading attestations.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
-    with:
-      image: ${{ needs.bluebuild.outputs.FULL_IMAGE_REF }}
-      digest: ${{ needs.bluebuild.outputs.IMAGE_DIGEST }}
-      registry-username: ${{ github.actor }}
-    secrets:
-      registry-password: ${{ secrets.GITHUB_TOKEN }}

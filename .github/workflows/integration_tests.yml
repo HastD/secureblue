@@ -13,9 +13,6 @@
 name: integ-tests
 permissions: {}
 on:
-  schedule:
-    - cron: "00 7 * * *" # run at 7:00 UTC every day
-
   workflow_dispatch:
 
 concurrency:
@@ -25,7 +22,6 @@ concurrency:
 jobs:
   integration-tests:
     name: Run integration tests
-    if: github.triggering_actor == 'royaloughtness' || github.event_name == 'schedule'
     runs-on: ubuntu-24.04
     permissions:
       contents: read # read repo contents
@@ -43,7 +39,7 @@ jobs:
       - name: Run integration tests
         uses: secureblue/bootc-integration-test-action@2236e712456801cd0bd47626733e95a180e38675 # v0.0.10
         with:
-          registry: ghcr.io/secureblue
+          registry: ghcr.io/hastd
           image: silverblue-main-hardened
           token: ${{ secrets.GITHUB_TOKEN }}
           tests: |
