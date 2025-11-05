@@ -232,6 +232,7 @@ jobs:
           use_cache: false
           retry_push_count: 3
           verify_install: true
+          build_opts: --platform linux/amd64
 
       - name: Install regctl
         uses: regclient/actions/regctl-installer@1b705e32d40851370799ea5814e83d0a5f6a70dc # v0.1.0
@@ -244,19 +245,3 @@ jobs:
         run: |
           IMAGE_DIGEST=$(regctl image digest "${FULL_IMAGE_REF}")
           echo "IMAGE_DIGEST=${IMAGE_DIGEST}" >> "${GITHUB_OUTPUT}"
-
-  provenance:
-    needs: [bluebuild]
-    permissions:
-      actions: read # for detecting the Github Actions environment.
-      id-token: write # for creating OIDC tokens for signing.
-      packages: write # for uploading attestations.
-    # Currently this must be referenced by tag, not by hash:
-    # https://github.com/slsa-framework/slsa-github-generator?tab=readme-ov-file#referencing-slsa-builders-and-generators
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_container_slsa3.yml@v2.1.0
-    with:
-      image: ${{ needs.bluebuild.outputs.FULL_IMAGE_REF }}
-      digest: ${{ needs.bluebuild.outputs.IMAGE_DIGEST }}
-      registry-username: ${{ github.actor }}
-    secrets:
-      registry-password: ${{ secrets.GITHUB_TOKEN }}
