@@ -272,6 +272,7 @@ jobs:
           use_cache: false
           retry_push_count: 3
           verify_install: true
+          build_opts: --platform linux/amd64
 
       - name: Install regctl
         uses: regclient/actions/regctl-installer@dd58ad94f76adb73d8ac1bf75ed25f01545d5b32 # v0.2.0
