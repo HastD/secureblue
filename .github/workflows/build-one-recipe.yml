@@ -293,6 +293,7 @@ jobs:
           retry_push_count: 3
           verify_install: true
           digestfile: ${{ steps.digestfile.outputs.digestfile }}
+          build_opts: --platform linux/amd64
 
       - name: Output image digest
         id: image_manifest_metadata
