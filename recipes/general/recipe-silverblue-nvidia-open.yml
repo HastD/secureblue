@@ -27,3 +27,4 @@ platforms:
 modules:
   - from-file: common/nvidia-install.yml
   - from-file: common/final-modules.yml
+
