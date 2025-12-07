@@ -17,8 +17,7 @@ permissions: {}
 on:
   pull_request:
     branches:
-      - live
-      - staging
+      - test-build
     paths:
       - '**nvidia**'
       - '!**.md'
