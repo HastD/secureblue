@@ -21,8 +21,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true
 jobs:
-  silverblue-main:
-    name: Build silverblue main
+  iot-main:
+    name: Build iot main
     permissions:
       contents: read # Needed to pull the repo for the build
       actions: read # Needed to read actions and actions logs for provenance generation
@@ -30,7 +30,7 @@ jobs:
       id-token: write # Needed for token generation for signing
     uses: ./.github/workflows/build-one-recipe.yml
     with:
-      recipe: general/recipe-silverblue-main.yml
+      recipe: iot/recipe-iot-main.yml
       rechunk: true
     secrets:
       SIGNING_SECRET: ${{ secrets.SIGNING_SECRET }}
