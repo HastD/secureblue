@@ -33,14 +33,6 @@ SOURCE_FILES_PATH: Final[str] = "files/po/po-source-files.json"
 # This is the locale used for translatable strings in the repo.
 LOCALE: Final[str] = "en_US.UTF-8"
 
-# Reference for locale environment variables:
-# https://www.gnu.org/software/gettext/manual/html_node/Locale-Environment-Variables.html
-# `msginit` requires this to be set to work properly.
-os.environ["LC_MESSAGES"] = LOCALE
-os.environ["LANG"] = LOCALE
-os.environ.pop("LANGUAGE", None)
-os.environ.pop("LC_ALL", None)
-
 
 def command_stdout(*args: str) -> str:
     """Run a command in the shell and return the contents of stdout."""
@@ -67,7 +59,9 @@ for domain, source_files in domain_map.items():
     for po_path in glob.iglob(f"files/po/*/{glob.escape(domain)}.po"):
         if po_path.startswith("files/po/en/"):
             subprocess.run(
-                ["msginit", "-i", pot_path, "-o", po_path, "--no-translator"], check=True
+                ["msginit", "-i", pot_path, "-o", po_path, "--no-translator"],
+                check=True,
+                env={"LANG": LOCALE, "LC_MESSAGES": LOCALE},
             )
         else:
             subprocess.run(["msgmerge", "--backup=none", "--update", po_path, pot_path], check=True)
