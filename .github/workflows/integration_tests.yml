@@ -14,7 +14,7 @@ concurrency:
 jobs:
   integration-tests:
     name: Run integration tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       contents: read # read repo contents
       packages: write # push integration test image
@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
 
       - name: Run integration tests
-        uses: secureblue/bootc-integration-test-action@2236e712456801cd0bd47626733e95a180e38675 # v0.0.10
+        uses: hastd/bootc-integration-test-action@test
         with:
           registry: ghcr.io/${{ github.repository_owner }}
           image: silverblue-main-hardened
