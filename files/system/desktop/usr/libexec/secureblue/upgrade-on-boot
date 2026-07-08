@@ -55,8 +55,9 @@ else
     plymouth system-update --progress=0
     echo "Plymouth initialized"
 
-    BOOTC_OUTPUT=$(mktemp -u /run/bootc-upgrade-XXXXXX)
-    mkfifo "${BOOTC_OUTPUT}"
+    BOOTC_OUTPUT=$(mktemp -u /run/bootc-upgrade-XXXXXXXXXX)
+    trap 'rm -f "${BOOTC_OUTPUT}"' EXIT
+    mkfifo -m 600 "${BOOTC_OUTPUT}"
 
     while IFS= read -r line; do
         echo "Got line: ${line}"
@@ -81,7 +82,6 @@ else
     bootc upgrade --quiet --progress-fd 3 3>"${BOOTC_OUTPUT}"
     BOOTC_EXIT=$?
     echo "bootc exited with: ${BOOTC_EXIT}"
-    rm -f "${BOOTC_OUTPUT}"
 
     if (( BOOTC_EXIT != 0 )); then
         echo "${UPDATE_FAILURE_STRING}"
